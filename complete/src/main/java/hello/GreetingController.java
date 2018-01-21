@@ -35,10 +35,25 @@ public class GreetingController {
 		greeting("aaa");
 		return new ResponseEntity<String>("ok", HttpStatus.OK);
 	}
-
-	@Scheduled(fixedRate = 5000)
-	public void reportCurrentTime() {
-		this.template.convertAndSend("/topic/greetings", "{\"name\":\"aa\"}");
+	int i = 0;
+	@Scheduled(fixedRate = 500)
+	public void reportCurrentTime() throws InterruptedException {
+		Runnable r = ()->{
+			try {
+				Thread.sleep(10000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			System.out.println(i++);
+			this.template.convertAndSend("/topic/greetings", "{\"name\":\"aa\"}");
+		};
+		new Thread(r).start();
+	}
+	
+	@Scheduled(fixedRate = 500)
+	public void reportCurrentTime1() throws InterruptedException {
+		
 	}
 
 }
